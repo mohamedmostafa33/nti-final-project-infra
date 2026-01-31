@@ -25,3 +25,18 @@ public_subnet_cidr_block_b = "10.0.3.0/24"
 private_subnet_cidr_block_a = "10.0.2.0/24"
 
 private_subnet_cidr_block_b = "10.0.4.0/24"
+
+cluster_name = "reddit-clone-eks-cluster"
+
+eks_version = "1.33"
+
+node_instance_type = "t3.small"
+
+node_min_size = 3
+
+node_max_size = 3
+
+tags = {
+  Environment = "Dev"
+  Project     = "RedditClone"
+}

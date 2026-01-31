@@ -60,3 +60,43 @@ output "private_route_table_id" {
   description = "Private route table ID"
   value       = module.vpc.private_route_table_id
 }
+
+output "eks_cluster_name" {
+  value       = module.eks.eks_cluster_name
+  description = "Name of the EKS cluster"
+}
+
+output "eks_cluster_endpoint" {
+  value       = module.eks.eks_cluster_endpoint
+  description = "Cluster API server endpoint"
+}
+
+output "eks_cluster_arn" {
+  value       = module.eks.eks_cluster_arn
+  description = "ARN of the EKS cluster"
+}
+
+output "eks_node_group_name" {
+  value       = module.eks.eks_node_group_name
+  description = "Name of the EKS node group"
+}
+
+output "eks_node_group_arn" {
+  value       = module.eks.eks_node_group_arn
+  description = "ARN of the EKS node group"
+}
+
+output "eks_cluster_sg_id" {
+  value       = module.eks.eks_cluster_sg_id
+  description = "Security group ID of EKS cluster"
+}
+
+output "eks_node_group_sg_id" {
+  value       = module.eks.eks_node_group_sg_id
+  description = "Security group ID of EKS nodes"
+}
+
+output "eks_cluster_managed_sg_id" {
+  value       = module.eks.eks_cluster_managed_sg_id
+  description = "Cluster-managed security group ID automatically created by EKS"
+}

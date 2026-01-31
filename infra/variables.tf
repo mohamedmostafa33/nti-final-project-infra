@@ -82,3 +82,42 @@ variable "private_subnet_cidr_block_b" {
   type        = string
   default     = "10.0.4.0/24"
 }
+
+variable "cluster_name" {
+  description = "The name of the EKS cluster"
+  type        = string
+  default     = "reddit-clone-eks-cluster"
+}
+
+variable "eks_version" {
+  description = "The Kubernetes version for the EKS cluster"
+  type        = string
+  default     = "1.33"
+}
+
+variable "node_instance_type" {
+  description = "Instance type for the node group"
+  type        = string
+  default     = "t3.small"
+}
+
+variable "node_min_size" {
+  description = "Minimum number of nodes"
+  type        = number
+  default     = 2
+}
+
+variable "node_max_size" {
+  description = "Maximum number of nodes"
+  type        = number
+  default     = 2
+}
+
+variable "tags" {
+  description = "Tags for all resources"
+  type        = map(string)
+  default = {
+    Environment = "Dev"
+    Project     = "RedditClone"
+  }
+}
