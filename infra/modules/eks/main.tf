@@ -132,12 +132,17 @@ resource "aws_eks_cluster" "reddit_clone_eks_cluster" {
   version  = var.eks_version
 
   vpc_config {
-    subnet_ids = var.private_subnet_ids
+    subnet_ids              = var.private_subnet_ids
     endpoint_public_access  = true
     endpoint_private_access = true
   }
 
   tags = var.tags
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSServicePolicy,
+  ]
 }
 
 resource "aws_eks_node_group" "reddit_clone_eks_node_group" {
@@ -154,5 +159,11 @@ resource "aws_eks_node_group" "reddit_clone_eks_node_group" {
 
   instance_types = [var.node_instance_type]
 
-  tags = var.tags 
+  tags = var.tags
+
+  depends_on = [
+    aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly,
+  ]
 }

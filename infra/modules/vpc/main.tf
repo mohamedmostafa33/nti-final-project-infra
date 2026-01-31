@@ -92,6 +92,8 @@ resource "aws_nat_gateway" "reddit_clone_nat_gw" {
     local.common_tags,
     { Name = "reddit-clone-nat-gw" }
   )
+
+  depends_on = [aws_internet_gateway.reddit_clone_igw]
 }
 
 resource "aws_route_table" "reddit_clone_public_route_table" {

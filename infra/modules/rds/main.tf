@@ -41,11 +41,11 @@ resource "aws_security_group" "reddit_clone_rds_sg" {
 }
 
 resource "aws_db_subnet_group" "reddit_clone_rds_subnet_group" {
-  name       = "puddle-rds-subnet-group"
+  name       = "reddit-clone-rds-subnet-group"
   subnet_ids = var.subnet_ids
 
   tags = {
-    Name = "puddle-rds-subnet-group"
+    Name = "reddit-clone-rds-subnet-group"
   }
 }
 
