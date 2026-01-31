@@ -23,3 +23,12 @@ module "rds" {
   eks_cluster_sg_id    = module.eks.eks_cluster_sg_id
   eks_cluster_managed_sg_id = module.eks.eks_cluster_managed_sg_id
 }
+
+module "vpc" {
+  source                      = "./modules/vpc"
+  vpc_cidr_block              = var.vpc_cidr_block
+  public_subnet_cidr_block_a  = var.public_subnet_cidr_block_a
+  public_subnet_cidr_block_b  = var.public_subnet_cidr_block_b
+  private_subnet_cidr_block_a = var.private_subnet_cidr_block_a
+  private_subnet_cidr_block_b = var.private_subnet_cidr_block_b
+}
