@@ -1,0 +1,95 @@
+name: Infrastructure Provisioning Workflow
+
+run-name: Infrastructure Provisioning – Terraform ${{ inputs.action || 'Auto-Apply' }}
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Select step to run { plan , apply, outputs, destroy }'
+        required: true
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+          - outputs
+jobs:
+  terraform:
+    name: Provision AWS Infrastructure
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Starting checkout
+        run: echo "Checking out repository code..."
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configuring AWS
+        run: echo "Configuring AWS credentials for region ${{ env.AWS_REGION }}..."
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setting up Terraform
+        run: echo "Setting up Terraform version 1.7.5..."
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Terraform Init
+        working-directory: infra/
+        run: |
+          echo "Initializing Terraform backend and providers..."
+          terraform init
+
+      - name: Terraform Validate
+        working-directory: infra/
+        run: |
+          echo "Validating Terraform configuration files..."
+          terraform validate
+
+      - name: Terraform Plan
+        working-directory: infra/
+        if: inputs.action == 'plan'
+        run: |
+          echo "Creating Terraform execution plan..."
+          terraform plan -input=false
+          echo "Plan completed successfully!"
+        
+      - name: Terraform Apply
+        working-directory: infra/
+        if: inputs.action == 'apply'
+        run: |
+          echo "Applying infrastructure changes..."
+          terraform apply -input=false -auto-approve
+          echo "Infrastructure deployed successfully!"
+
+      - name: Show Outputs
+        working-directory: infra/
+        if: inputs.action == 'outputs'
+        run: |
+          echo "Fetching Terraform output values..."
+          terraform output
+          echo "Outputs retrieved successfully!"
+
+      - name: Terraform Destroy
+        working-directory: infra/
+        if: inputs.action == 'destroy'
+        run: |
+          echo "Destroying infrastructure resources..."
+          terraform destroy -auto-approve
+          echo "Infrastructure destroyed successfully!"

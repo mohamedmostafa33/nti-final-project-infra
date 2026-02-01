@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
-    bucket         = "reddit-clone-terraform-state"
+    bucket         = "reddit-nti-tfstate"
     key            = "terraform.tfstate"
     region         = "us-east-1"
 
-    dynamodb_table = "reddit-terraform-locks"
+    dynamodb_table = "reddit-nti-tfstate-lock"
     encrypt        = true
   }
 }
