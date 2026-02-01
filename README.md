@@ -18,9 +18,10 @@ The infrastructure is designed with high availability and security best practice
 
 ## Prerequisites
 
-- Terraform >= 1.0
+- Terraform >= 1.7.5
 - AWS CLI configured with appropriate credentials
 - AWS Account with necessary permissions
+- GitHub repository with Actions enabled (for automated deployments)
 
 ## Infrastructure Components
 
@@ -68,6 +69,9 @@ infra/
 ├── terraform.tfvars     # Variable values
 ├── provider.tf          # AWS provider configuration
 ├── versions.tf          # Terraform version constraints
+├── .github/
+│   └── workflows/
+│       └── infra.yml    # GitHub Actions workflow
 └── modules/
     ├── ecr/             # Container registry module
     ├── eks/             # Kubernetes cluster module
@@ -78,26 +82,69 @@ infra/
 
 ## Usage
 
-### Initialize Terraform
+### GitHub Actions Workflow
+
+The infrastructure can be managed through GitHub Actions for automated and consistent deployments.
+
+#### Workflow Triggers
+
+Navigate to **Actions** tab in GitHub repository and select **Infrastructure Provisioning Workflow**.
+
+#### Available Actions
+
+| Action | Description | Use Case |
+|--------|-------------|----------|
+| `plan` | Generate execution plan | Review changes before applying |
+| `apply` | Apply infrastructure changes | Deploy or update infrastructure |
+| `outputs` | Display Terraform outputs | Retrieve resource information |
+| `destroy` | Remove all infrastructure | Clean up resources |
+
+#### Workflow Features
+
+- Automated AWS credential configuration
+- Terraform initialization and validation
+- Detailed step-by-step logging
+- Supports multiple operations in isolated runs
+
+#### Prerequisites for Workflow
+
+Configure the following secrets in GitHub repository settings:
+
+- `AWS_ACCESS_KEY_ID`: AWS access key
+- `AWS_SECRET_ACCESS_KEY`: AWS secret key
+
+#### Running Workflow
+
+1. Go to Actions tab in GitHub
+2. Select "Infrastructure Provisioning Workflow"
+3. Click "Run workflow"
+4. Choose desired action from dropdown
+5. Click "Run workflow" button
+
+### Manual Terraform Usage
+
+For local development or testing:
+
+#### Initialize Terraform
 
 ```bash
 cd infra
 terraform init
 ```
 
-### Review Infrastructure Plan
+#### Review Infrastructure Plan
 
 ```bash
 terraform plan
 ```
 
-### Deploy Infrastructure
+#### Deploy Infrastructure
 
 ```bash
 terraform apply
 ```
 
-### Destroy Infrastructure
+#### Destroy Infrastructure
 
 ```bash
 terraform destroy
@@ -136,6 +183,37 @@ The infrastructure provides the following outputs:
 - **RDS Endpoint**: Database connection string
 - **EKS Cluster Endpoint**: Kubernetes API server endpoint
 - **VPC Details**: VPC ID, subnet IDs, and gateway information
+
+## State Management
+
+### Current Setup
+
+Terraform state is stored locally in `terraform.tfstate` file. Suitable for individual development and testing.
+
+### Remote State (Recommended for Teams)
+
+For production and team collaboration, use S3 backend with DynamoDB locking:
+
+```hcl
+# backend.tf
+terraform {
+  backend "s3" {
+    bucket         = "your-terraform-state-bucket"
+    key            = "reddit-clone/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-state-lock"
+  }
+}
+```
+
+**Benefits:**
+- Team collaboration with automatic state locking
+- State versioning and encryption
+- Prevents concurrent modifications
+- Works seamlessly with GitHub Actions workflow
+
+**Important:** Never commit `terraform.tfstate` to version control.
 
 ## Security Considerations
 
@@ -207,25 +285,3 @@ Verify security groups allow traffic from EKS nodes to RDS on port 5432.
 
 ### S3 Access Issues
 Check bucket policies and ensure public read access is properly configured for static content paths.
-
-## Contributing
-
-Contributions are welcome. Please follow infrastructure as code best practices:
-- Use meaningful commit messages
-- Test changes in a development environment
-- Document new variables and outputs
-- Follow Terraform style conventions
-
-## License
-
-This project is part of the NTI Final Project infrastructure.
-
-## Tags
-
-All resources are tagged with:
-- Environment: Dev
-- Project: RedditClone
-
-## Author
-
-Infrastructure maintained as part of NTI DevOps training program.
