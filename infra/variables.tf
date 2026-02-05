@@ -1,7 +1,7 @@
-variable "ecr_name" {
-  description = "Name of the ECR repository"
-  type        = string
-  default     = "reddit-clone-app-repo"
+variable "ecr_names" {
+  description = "List of ECR repository names"
+  type        = list(string)
+  default     = ["backend-app", "reddit-frontend"]
 }
 
 variable "s3_bucket_name" {

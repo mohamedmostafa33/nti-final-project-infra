@@ -1,5 +1,9 @@
-resource "aws_ecr_repository" "reddit_clone_app_ecr_repo" {
-  name                 = var.ecr_name
+resource "aws_ecr_repository" "repos" {
+  for_each             = toset(var.ecr_names)
+  name                 = each.value
   image_tag_mutability = "MUTABLE"
-  
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }

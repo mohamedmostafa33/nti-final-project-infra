@@ -1,5 +1,11 @@
-output "ecr_repository_url" {
-  value = module.ecr.ecr_repository_url
+output "ecr_repository_urls" {
+  description = "Map of ECR repository URLs"
+  value       = module.ecr.ecr_repository_urls
+}
+
+output "ecr_registry_url" {
+  description = "ECR registry URL (without repo name)"
+  value       = module.ecr.ecr_registry_url
 }
 
 output "s3_bucket_name" {
