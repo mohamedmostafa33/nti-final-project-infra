@@ -40,6 +40,8 @@ resource "aws_s3_bucket_policy" "public_read_static_and_media" {
       }
     ]
   })
+
+  depends_on = [aws_s3_bucket_public_access_block.reddit_clone_bucket_public_access_block]
 }
 
 resource "aws_s3_bucket_versioning" "reddit_clone_bucket_versioning" {
