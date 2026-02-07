@@ -7,7 +7,7 @@ variable "ecr_names" {
 variable "s3_bucket_name" {
   description = "Name of the s3 bucket"
   type        = string
-  default     = "reddit-clone-s3-media"
+  default     = "reddit-clone-bucket-nti"
 }
 
 variable "db_name" {

@@ -17,9 +17,9 @@ resource "aws_s3_bucket_ownership_controls" "reddit_clone_bucket_ownership_contr
 resource "aws_s3_bucket_public_access_block" "reddit_clone_bucket_public_access_block" {
   bucket = aws_s3_bucket.reddit_clone_bucket.id
 
-  block_public_acls       = true
-  ignore_public_acls      = true
-  block_public_policy     = false
+  block_public_acls       = true  
+  ignore_public_acls      = true  
+  block_public_policy     = false   
   restrict_public_buckets = false
 }
 
@@ -34,7 +34,7 @@ resource "aws_s3_bucket_policy" "public_read_static_and_media" {
         Principal = "*"
         Action    = "s3:GetObject"
         Resource = [
-          "arn:aws:s3:::${aws_s3_bucket.reddit_clone_bucket.bucket}/staticfiles/*",
+          "arn:aws:s3:::${aws_s3_bucket.reddit_clone_bucket.bucket}/static/*",
           "arn:aws:s3:::${aws_s3_bucket.reddit_clone_bucket.bucket}/media/*"
         ]
       }
