@@ -1,7 +1,7 @@
 variable "ecr_names" {
   description = "List of ECR repository names"
   type        = list(string)
-  default     = ["backend-app", "reddit-frontend"]
+  default     = ["reddit-backend", "reddit-frontend"]
 }
 
 variable "s3_bucket_name" {
