@@ -1,3 +1,15 @@
+variable "target_access_key" {
+  description = "AWS Access Key for the target account (where infrastructure will be deployed)"
+  type        = string
+  sensitive   = true
+}
+
+variable "target_secret_key" {
+  description = "AWS Secret Key for the target account (where infrastructure will be deployed)"
+  type        = string
+  sensitive   = true
+}
+
 variable "ecr_names" {
   description = "List of ECR repository names"
   type        = list(string)

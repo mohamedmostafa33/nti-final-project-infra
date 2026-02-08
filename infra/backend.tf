@@ -6,5 +6,6 @@ terraform {
 
     dynamodb_table = "reddit-nti-tfstate-lock"
     encrypt        = true
+
   }
 }

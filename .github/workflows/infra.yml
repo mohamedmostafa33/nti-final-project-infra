@@ -32,16 +32,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configuring AWS
-        run: echo "Configuring AWS credentials for region ${{ env.AWS_REGION }}..."
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
       - name: Setting up Terraform
         run: echo "Setting up Terraform version 1.7.5..."
 
@@ -49,6 +39,13 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
+
+      - name: Configure AWS credentials for State Account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.STATE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.STATE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Init
         working-directory: infra/
@@ -67,7 +64,9 @@ jobs:
         if: inputs.action == 'plan'
         run: |
           echo "Creating Terraform execution plan..."
-          terraform plan -input=false
+          terraform plan -input=false \
+            -var="target_access_key=${{ secrets.TARGET_AWS_ACCESS_KEY_ID }}" \
+            -var="target_secret_key=${{ secrets.TARGET_AWS_SECRET_ACCESS_KEY }}"
           echo "Plan completed successfully!"
         
       - name: Terraform Apply
@@ -75,7 +74,9 @@ jobs:
         if: inputs.action == 'apply'
         run: |
           echo "Applying infrastructure changes..."
-          terraform apply -input=false -auto-approve
+          terraform apply -input=false -auto-approve \
+            -var="target_access_key=${{ secrets.TARGET_AWS_ACCESS_KEY_ID }}" \
+            -var="target_secret_key=${{ secrets.TARGET_AWS_SECRET_ACCESS_KEY }}"
           echo "Infrastructure deployed successfully!"
 
       - name: Show Outputs
@@ -91,5 +92,7 @@ jobs:
         if: inputs.action == 'destroy'
         run: |
           echo "Destroying infrastructure resources..."
-          terraform destroy -auto-approve
+          terraform destroy -auto-approve \
+            -var="target_access_key=${{ secrets.TARGET_AWS_ACCESS_KEY_ID }}" \
+            -var="target_secret_key=${{ secrets.TARGET_AWS_SECRET_ACCESS_KEY }}"
           echo "Infrastructure destroyed successfully!"
