@@ -34,7 +34,7 @@ node_instance_type = "t3.small"
 
 node_min_size = 3
 
-node_max_size = 3
+node_max_size = 5
 
 tags = {
   Environment = "Dev"
