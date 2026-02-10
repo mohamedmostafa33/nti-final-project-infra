@@ -110,13 +110,13 @@ variable "eks_version" {
 variable "node_instance_type" {
   description = "Instance type for the node group"
   type        = string
-  default     = "t3.small"
+  default     = "t3.medium"
 }
 
 variable "node_min_size" {
   description = "Minimum number of nodes"
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "node_max_size" {

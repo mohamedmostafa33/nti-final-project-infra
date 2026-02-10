@@ -30,7 +30,7 @@ cluster_name = "reddit-clone-eks-cluster"
 
 eks_version = "1.33"
 
-node_instance_type = "t3.small"
+node_instance_type = "t3.medium"
 
 node_min_size = 3
 
